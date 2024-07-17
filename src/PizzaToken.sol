@@ -8,15 +8,29 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 /// @author Dustin Stacy
 /// @notice Basic implementation of the ERC20 token for use in Merkle Airdrop Contract.
 contract PizzaToken is ERC20, Ownable {
+    /// @dev Emitted when attempting to perform an action with an amount that must be more than zero.
+    error PizzaToken__AmountMustBeMoreThanZero();
+
+    /// @dev Emitted when attempting to perform an action with a zero address.
+    error PizzaToken__AddressCannotBeZero();
+
     /// @notice The newest version of Open Zeppelin's Ownable contract require's an `initialOwner` to be passed to the
     /// Ownable constructor.
     /// @notice If using an older version, no `initialOwner` will be required.
     /// @notice This contract sets the `initialOwner` to the deployer.
-    constructor() ERC20("PIZZA", "PZA") Ownable(msg.sender) { }
+    constructor(address _owner) ERC20("Pizza Token", "PZA") Ownable(_owner) { }
 
     /// @param to Address to mint tokens to.
     /// @param amount Amount of tokens to mint.
-    function mint(address to, uint256 amount) external onlyOwner {
+    /// @return A boolean that indicates if the operation was successful.
+    function mint(address to, uint256 amount) external onlyOwner returns (bool) {
+        if (to == address(0)) {
+            revert PizzaToken__AddressCannotBeZero();
+        }
+        if (amount <= 0) {
+            revert PizzaToken__AmountMustBeMoreThanZero();
+        }
         _mint(to, amount);
+        return true;
     }
 }
