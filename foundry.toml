@@ -8,6 +8,7 @@ fs_permissions = [
   {access = "read", path = "./reports" },
   {access = "read", path = "./img"}
 ]
+
 remappings = [
     'murky/=lib/murky/',
     '@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/',
