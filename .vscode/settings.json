@@ -1,6 +1,0 @@
-{
-    "[json]": {
-        "editor.defaultFoldingRangeProvider": "vscode.json-language-features",
-        "editor.defaultFormatter": "vscode.json-language-features"
-    }
-}
