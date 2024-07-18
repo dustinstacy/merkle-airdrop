@@ -12,7 +12,7 @@ contract DeployMerkleAirdop is Script {
 
     function deployMerkleAirdrop() public returns (MerkleAirdrop airdrop, PizzaToken pizza) {
         vm.startBroadcast();
-        pizza = new PizzaToken(msg.sender);
+        pizza = new PizzaToken();
         airdrop = new MerkleAirdrop(merkleRoot, IERC20(address(pizza)));
         pizza.mint(pizza.owner(), amountToMint);
         pizza.transfer(address(airdrop), amountToMint);

@@ -4,12 +4,13 @@ pragma solidity ^0.8.24;
 import { Test, console } from "forge-std/Test.sol";
 import { PizzaToken } from "src/PizzaToken.sol";
 import { MerkleAirdrop } from "src/MerkleAirdrop.sol";
+import { DeployMerkleAirdop } from "script/DeployMerkleAirdrop.s.sol";
+import { ZkSyncChainChecker } from "foundry-devops/src/ZkSyncChainChecker.sol";
 
-contract MerkleAirdropTest is Test {
+contract MerkleAirdropTest is ZkSyncChainChecker, Test {
     PizzaToken pizza;
     MerkleAirdrop airdrop;
 
-    address public owner = makeAddr("owner");
     address user;
     uint256 userKey;
 
@@ -21,14 +22,17 @@ contract MerkleAirdropTest is Test {
     bytes32[] public PROOF = [proofOne, proofTwo];
 
     function setUp() public {
-        pizza = new PizzaToken(owner);
-        airdrop = new MerkleAirdrop(ROOT, pizza);
-        (user, userKey) = makeAddrAndKey("user");
+        if (!isZkSyncChain()) {
+            DeployMerkleAirdop deployer = new DeployMerkleAirdop();
+            (airdrop, pizza) = deployer.deployMerkleAirdrop();
+        } else {
+            pizza = new PizzaToken();
+            airdrop = new MerkleAirdrop(ROOT, pizza);
+            pizza.mint(pizza.owner(), AMOUNT_TO_MINT);
+            pizza.transfer(address(airdrop), AMOUNT_TO_MINT);
+        }
 
-        vm.startPrank(owner);
-        pizza.mint(pizza.owner(), AMOUNT_TO_MINT);
-        pizza.transfer(address(airdrop), AMOUNT_TO_MINT);
-        vm.stopPrank();
+        (user, userKey) = makeAddrAndKey("user");
     }
 
     function test_UsersCanClaim() public {

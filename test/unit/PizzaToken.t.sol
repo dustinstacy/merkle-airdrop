@@ -8,12 +8,12 @@ import { PizzaToken } from "src/PizzaToken.sol";
 contract PizzaTokenTest is Test {
     PizzaToken public pizza;
 
-    address public owner = makeAddr("owner");
+    address public owner = address(this);
     address public user = makeAddr("user");
     uint256 public mintAmount = 20e18;
 
     function setUp() public {
-        pizza = new PizzaToken(owner);
+        pizza = new PizzaToken();
     }
 
     ///

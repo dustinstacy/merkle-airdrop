@@ -18,7 +18,7 @@ contract PizzaToken is ERC20, Ownable {
     /// Ownable constructor.
     /// @notice If using an older version, no `initialOwner` will be required.
     /// @notice This contract sets the `initialOwner` to the deployer.
-    constructor(address _owner) ERC20("Pizza Token", "PZA") Ownable(_owner) { }
+    constructor() ERC20("Pizza Token", "PZA") Ownable(msg.sender) { }
 
     /// @param to Address to mint tokens to.
     /// @param amount Amount of tokens to mint.
