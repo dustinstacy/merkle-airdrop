@@ -6,7 +6,8 @@ solc = "0.8.24"
 fs_permissions = [
   {access = "read", path = "./broadcast" },
   {access = "read", path = "./reports" },
-  {access = "read", path = "./img"}
+  {access = "read", path = "./img"},
+  {access = "read-write", path = "./script/target"}
 ]
 
 remappings = [
