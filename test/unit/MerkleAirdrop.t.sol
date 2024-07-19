@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.24;
 
-import { Test, console } from "forge-std/Test.sol";
-import { PizzaToken } from "src/PizzaToken.sol";
-import { MerkleAirdrop } from "src/MerkleAirdrop.sol";
-import { DeployMerkleAirdop } from "script/DeployMerkleAirdrop.s.sol";
-import { ZkSyncChainChecker } from "foundry-devops/src/ZkSyncChainChecker.sol";
+import { Test, console } from 'forge-std/Test.sol';
+import { PizzaToken } from 'src/PizzaToken.sol';
+import { MerkleAirdrop } from 'src/MerkleAirdrop.sol';
+import { DeployMerkleAirdop } from 'script/DeployMerkleAirdrop.s.sol';
+import { ZkSyncChainChecker } from 'foundry-devops/src/ZkSyncChainChecker.sol';
 
 contract MerkleAirdropTest is ZkSyncChainChecker, Test {
     PizzaToken pizza;
     MerkleAirdrop airdrop;
 
+    address public gasPayer;
     address user;
     uint256 userKey;
 
@@ -32,17 +33,20 @@ contract MerkleAirdropTest is ZkSyncChainChecker, Test {
             pizza.transfer(address(airdrop), AMOUNT_TO_MINT);
         }
 
-        (user, userKey) = makeAddrAndKey("user");
+        gasPayer = makeAddr('gasPayer');
+        (user, userKey) = makeAddrAndKey('user');
     }
 
     function test_UsersCanClaim() public {
         uint256 startingBalance = pizza.balanceOf(user);
+        bytes32 digest = airdrop.getMessageHash(user, AMOUNT_TO_CLAIM);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(userKey, digest);
 
-        vm.prank(user);
-        airdrop.claim(user, AMOUNT_TO_CLAIM, PROOF);
+        vm.prank(gasPayer);
+        airdrop.claim(user, AMOUNT_TO_CLAIM, PROOF, v, r, s);
 
         uint256 endingBalance = pizza.balanceOf(user);
-        console.log("Ending balance:", endingBalance);
+        console.log('Ending balance:', endingBalance);
         assertEq(endingBalance - startingBalance, AMOUNT_TO_CLAIM);
     }
 }
