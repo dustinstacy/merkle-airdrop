@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.24;
 
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { ERC20 } from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import { Ownable } from '@openzeppelin/contracts/access/Ownable.sol';
 
 /// @title PizzaToken
 /// @author Dustin Stacy
@@ -18,7 +18,7 @@ contract PizzaToken is ERC20, Ownable {
     /// Ownable constructor.
     /// @notice If using an older version, no `initialOwner` will be required.
     /// @notice This contract sets the `initialOwner` to the deployer.
-    constructor() ERC20("Pizza Token", "PZA") Ownable(msg.sender) { }
+    constructor() ERC20('Pizza Token', 'PZA') Ownable(msg.sender) {}
 
     /// @param to Address to mint tokens to.
     /// @param amount Amount of tokens to mint.
@@ -27,7 +27,7 @@ contract PizzaToken is ERC20, Ownable {
         if (to == address(0)) {
             revert PizzaToken__AddressCannotBeZero();
         }
-        if (amount <= 0) {
+        if (amount == 0) {
             revert PizzaToken__AmountMustBeMoreThanZero();
         }
         _mint(to, amount);
