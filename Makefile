@@ -59,7 +59,7 @@ ifeq ($(findstring --network sepolia,$(ARGS)),--network sepolia)
 endif
 
 deploy:
-	@forge script script/DeployMerkleAirdrop.s.sol:DeployMerkleAirdrop $(NETWORK_ARGS)
+	forge script script/DeployMerkleAirdrop.s.sol:DeployMerkleAirdrop $(NETWORK_ARGS)
 
 # As of writing, the Alchemy zkSync RPC URL is not working correctly 
 deploy-zk:
